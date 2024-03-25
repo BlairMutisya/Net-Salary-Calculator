@@ -19,11 +19,26 @@ function calculateNetSalary() {
 }
 
 function calculatePayee(salary) {
-  let employeeContribution = salary * 0.02;
-  let employerContribution = salary * 0.04; 
-  let totalContribution = employeeContribution + employerContribution;
-  return totalContribution;
+  let taxRates = [
+      { min: 0, max: 24587, rate: 0.1 },
+      { min: 24588, max: 36279, rate: 0.15 },
+      { min: 36280, max: 47869, rate: 0.2 },
+      { min: 47870, max: 59560, rate: 0.25 },
+      { min: 59561, max: Infinity, rate: 0.3 }
+  ];
+
+  let tax = 0;
+
+  for (let i = 0; i < taxRates.length; i++) {
+      if (salary > taxRates[i].min && salary <= taxRates[i].max) {
+          tax = (salary - taxRates[i].min) * taxRates[i].rate;
+          break;
+      }
+  }
+
+  return tax;
 }
+
 
 function calculateNHIF(salary) {
   let nhifRates = [
@@ -48,7 +63,6 @@ function calculateNHIF(salary) {
 
   let nhifDeduction = 0;
 
-  // Find the appropriate range and deduct NHIF accordingly
   for (let i = 0; i < nhifRates.length; i++) {
       if (salary >= nhifRates[i].min && salary <= nhifRates[i].max) {
           nhifDeduction = nhifRates[i].deduction;
